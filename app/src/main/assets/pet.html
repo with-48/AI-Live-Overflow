@@ -6,7 +6,7 @@
 <title>小云朵</title>
 <style>
   html, body { margin:0; padding:0; width:100%; height:100%; background:transparent; overflow:hidden; }
-  #pet { width:100%; height:100%; display:block; }
+  #pet { width:100%; height:100%; display:block; position:absolute; left:0; top:0; }
   .bob { animation: bob 4.2s ease-in-out infinite; }
   @keyframes bob { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-7px); } }
   .rain { animation: drip 2s linear infinite; }
@@ -16,9 +16,26 @@
     100% { opacity:0; transform: translateY(28px); }
   }
   #blushL, #blushR { transition: opacity .3s ease; }
+  #bubble {
+    position:absolute; left:50%; top:2px; transform:translateX(-50%);
+    max-width:166px; padding:6px 10px; border-radius:12px;
+    font-size:12.5px; line-height:1.35; color:#3b4a5b; font-family:sans-serif;
+    background:#ffffff; border:2px solid #a9cfe8;
+    box-shadow:0 2px 6px rgba(90,130,170,.2);
+    display:none; word-break:break-word; text-align:center;
+  }
+  #bubble:after {
+    content:''; position:absolute; left:50%; bottom:-7px; transform:translateX(-50%);
+    border-left:6px solid transparent; border-right:6px solid transparent; border-top:7px solid #a9cfe8;
+  }
+  #bubble.s-heart { background:#ffe6ee; border-color:#ffb0c8; }
+  #bubble.s-whisper { background:#f2f4f7; border-color:#c8d0da; color:#6b7787; }
+  #bubble.s-shout { background:#ffe2e0; border-color:#ff9c94; color:#a33a30; }
+  #bubble.s-jelly { background:#e6f6e9; border-color:#9fd8ad; color:#2f7a45; }
 </style>
 </head>
 <body>
+<div id="bubble"></div>
 <svg id="pet" viewBox="0 0 180 220" xmlns="http://www.w3.org/2000/svg">
   <defs>
     <linearGradient id="cloudGrad" x1="0" y1="0" x2="0" y2="1">
@@ -33,28 +50,15 @@
   </defs>
 
   <g class="bob">
-    <!-- 云体：宽扁，两个小鼓包，底部平 -->
     <path id="cloud"
-      d="M44 140
-         C32 140 24 132 24 122
-         C24 112 30 104 40 100
-         C44 86 56 76 72 74
-         C84 72 88 82 92 84
-         C96 78 104 74 114 78
-         C128 82 138 92 140 104
-         C152 106 158 116 158 126
-         C158 134 150 140 140 140
-         L44 140 Z"
+      d="M44 140 C32 140 24 132 24 122 C24 112 30 104 40 100 C44 86 56 76 72 74 C84 72 88 82 92 84 C96 78 104 74 114 78 C128 82 138 92 140 104 C152 106 158 116 158 126 C158 134 150 140 140 140 L44 140 Z"
       fill="url(#cloudGrad)" stroke="#a9cfe8" stroke-width="3" stroke-linejoin="round" stroke-linecap="round"/>
-    <!-- 底部淡蓝阴影带 -->
     <path d="M40 132 C70 142 110 142 144 132 C142 137 138 140 132 140 L48 140 C42 140 40 136 40 132 Z"
       fill="#c8e0f2" opacity="0.85"/>
 
-    <!-- 腮红 -->
     <ellipse id="blushL" cx="62" cy="118" rx="10" ry="6" fill="#ffc3d2" opacity="0.75"/>
     <ellipse id="blushR" cx="118" cy="118" rx="10" ry="6" fill="#ffc3d2" opacity="0.75"/>
 
-    <!-- 表情 normal -->
     <g id="exprNormal">
       <circle cx="78" cy="108" r="5" fill="#3b4a5b"/>
       <circle cx="104" cy="108" r="5" fill="#3b4a5b"/>
@@ -62,22 +66,16 @@
       <circle cx="105.8" cy="106.2" r="1.7" fill="#ffffff"/>
       <path d="M86 122 Q91 127 96 122" fill="none" stroke="#3b4a5b" stroke-width="2.2" stroke-linecap="round"/>
     </g>
-
-    <!-- 表情 happy -->
     <g id="exprHappy" style="display:none">
       <path d="M72 107 Q78 101 84 107" fill="none" stroke="#3b4a5b" stroke-width="2.4" stroke-linecap="round"/>
       <path d="M96 107 Q102 101 108 107" fill="none" stroke="#3b4a5b" stroke-width="2.4" stroke-linecap="round"/>
       <path d="M83 121 Q90 131 97 121 Z" fill="#3b4a5b" stroke-linejoin="round"/>
     </g>
-
-    <!-- 表情 shy -->
     <g id="exprShy" style="display:none">
       <path d="M73 108 L69 112 L73 112 Z" fill="#3b4a5b"/>
       <path d="M107 108 L111 112 L107 112 Z" fill="#3b4a5b"/>
       <path d="M86 124 Q90 126 94 124" fill="none" stroke="#3b4a5b" stroke-width="2" stroke-linecap="round"/>
     </g>
-
-    <!-- 表情 angry -->
     <g id="exprAngry" style="display:none">
       <line x1="70" y1="98" x2="84" y2="104" stroke="#3b4a5b" stroke-width="2.4" stroke-linecap="round"/>
       <line x1="110" y1="98" x2="96" y2="104" stroke="#3b4a5b" stroke-width="2.4" stroke-linecap="round"/>
@@ -85,15 +83,12 @@
       <circle cx="104" cy="109" r="4.6" fill="#3b4a5b"/>
       <path d="M86 129 Q91 124 96 129" fill="none" stroke="#3b4a5b" stroke-width="2.2" stroke-linecap="round"/>
     </g>
-
-    <!-- 表情 blink -->
     <g id="exprBlink" style="display:none">
       <path d="M73 108 Q78 105 83 108" fill="none" stroke="#3b4a5b" stroke-width="2.4" stroke-linecap="round"/>
       <path d="M97 108 Q102 105 107 108" fill="none" stroke="#3b4a5b" stroke-width="2.4" stroke-linecap="round"/>
       <path d="M86 122 Q91 127 96 122" fill="none" stroke="#3b4a5b" stroke-width="2.2" stroke-linecap="round"/>
     </g>
 
-    <!-- 雨滴 -->
     <g id="drops">
       <line class="rain" x1="56" y1="152" x2="56" y2="163" stroke="url(#rainGrad)" stroke-width="3.6" stroke-linecap="round"/>
       <line class="rain" x1="90" y1="158" x2="90" y2="169" stroke="url(#rainGrad)" stroke-width="3.6" stroke-linecap="round"/>
@@ -113,11 +108,14 @@
   var blushes = [document.getElementById('blushL'), document.getElementById('blushR')];
   var drops = document.getElementById('drops');
   var pet = document.getElementById('pet');
+  var bubble = document.getElementById('bubble');
   var timer = null;
+  var btimer = null;
 
   function log(m) { try { if (window.petHost) window.petHost.log(m); } catch (e) {} }
 
   function show(name) {
+    if (!groups[name]) return;
     for (var k in groups) { groups[k].style.display = (k === name) ? '' : 'none'; }
   }
 
@@ -130,25 +128,37 @@
   window.petEngine = {
     onTap: function () {
       log('tap');
+      var s = pet.style.transform;
       pet.style.transform = 'scale(1.06)';
       setTimeout(function () { pet.style.transform = 'scale(1)'; }, 140);
       flash('happy', 500);
+      try { if (window.petHost) window.petHost.report('tap', ''); } catch (e) {}
     },
     onDoubleTap: function () {
       log('double');
       flash('blink', 600);
       for (var i = 0; i < blushes.length; i++) { blushes[i].setAttribute('opacity', '0.95'); }
       setTimeout(function () { for (var j = 0; j < blushes.length; j++) { blushes[j].setAttribute('opacity', '0.75'); } }, 600);
+      try { if (window.petHost) window.petHost.report('double_tap', ''); } catch (e) {}
     },
     onLongPress: function () {
       log('long');
       flash('angry', 900);
       drops.style.display = 'none';
       setTimeout(function () { drops.style.display = ''; }, 900);
+      try { if (window.petHost) window.petHost.report('long_press', ''); } catch (e) {}
     },
     setMood: function (m) {
       log('mood:' + m);
-      if (groups[m]) { flash(m, 1200); }
+      if (groups[m]) { flash(m, 1500); }
+    },
+    setBubble: function (text, style) {
+      if (!text) { bubble.style.display = 'none'; return; }
+      bubble.textContent = text;
+      bubble.className = (style && style !== 'normal') ? ('s-' + style) : '';
+      bubble.style.display = 'block';
+      if (btimer) clearTimeout(btimer);
+      btimer = setTimeout(function () { bubble.style.display = 'none'; }, 8000);
     }
   };
 })();
