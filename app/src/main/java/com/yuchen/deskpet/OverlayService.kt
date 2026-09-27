@@ -20,6 +20,10 @@ import android.webkit.WebSettings
 import android.webkit.WebView
 import android.webkit.WebViewClient
 import androidx.core.app.NotificationCompat
+import org.json.JSONArray
+import org.json.JSONObject
+import java.net.HttpURLConnection
+import java.net.URL
 
 class OverlayService : Service() {
 
@@ -27,6 +31,7 @@ class OverlayService : Service() {
     private var overlayView: WebView? = null
     private var params: WindowManager.LayoutParams? = null
     private val mainHandler = Handler(Looper.getMainLooper())
+    private var lastSig = ""
 
     private var initialX = 0
     private var initialY = 0
@@ -41,6 +46,9 @@ class OverlayService : Service() {
         private const val NOTIFICATION_ID = 1001
         private const val PET_W_DP = 180
         private const val PET_H_DP = 220
+        private const val POLL_MS = 5000L
+        const val SUPA_URL = "https://dovlvwfmmqdjfampfmjv.supabase.co"
+        const val SUPA_ANON = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRvdmx2d2ZtbXFkamZhbXBmbWp2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTA0OTQzNDQsImV4cCI6MjEwNjA3MDM0NH0.cFW0IGNqSpedR5PbQyobgEiJOKVny5lTOZENDLLDfOI"
     }
 
     override fun onBind(intent: Intent?): IBinder? = null
@@ -50,6 +58,63 @@ class OverlayService : Service() {
         createChannel()
         startForeground(NOTIFICATION_ID, buildNotification("我在。"))
         mainHandler.post { setupOverlay() }
+        mainHandler.postDelayed(pollRunnable, 1500)
+    }
+
+    private val pollRunnable = object : Runnable {
+        override fun run() {
+            Thread { fetchState() }.start()
+            mainHandler.postDelayed(this, POLL_MS)
+        }
+    }
+
+    private fun fetchState() {
+        try {
+            val conn = URL(SUPA_URL + "/rest/v1/pet_state?select=*&id=eq.1").openConnection() as HttpURLConnection
+            conn.setRequestProperty("apikey", SUPA_ANON)
+            conn.setRequestProperty("Authorization", "Bearer " + SUPA_ANON)
+            conn.connectTimeout = 8000
+            conn.readTimeout = 8000
+            val body = conn.inputStream.bufferedReader().use { it.readText() }
+            conn.disconnect()
+            val arr = JSONArray(body)
+            if (arr.length() > 0) {
+                val o = arr.getJSONObject(0)
+                val mood = o.optString("mood", "normal")
+                val bubble = o.optString("bubble", "")
+                val style = o.optString("bubble_style", "normal")
+                val sig = mood + "|" + bubble + "|" + style
+                if (sig != lastSig) {
+                    lastSig = sig
+                    mainHandler.post {
+                        eval("window.petEngine && window.petEngine.setMood && window.petEngine.setMood(" + JSONObject.quote(mood) + ")")
+                        eval("window.petEngine && window.petEngine.setBubble && window.petEngine.setBubble(" + JSONObject.quote(bubble) + ", " + JSONObject.quote(style) + ")")
+                    }
+                }
+            }
+        } catch (e: Exception) {
+        }
+    }
+
+    private fun postEvent(kind: String, payload: String) {
+        try {
+            val conn = URL(SUPA_URL + "/rest/v1/pet_events").openConnection() as HttpURLConnection
+            conn.requestMethod = "POST"
+            conn.doOutput = true
+            conn.setRequestProperty("apikey", SUPA_ANON)
+            conn.setRequestProperty("Authorization", "Bearer " + SUPA_ANON)
+            conn.setRequestProperty("Content-Type", "application/json")
+            conn.setRequestProperty("Prefer", "return=minimal")
+            conn.connectTimeout = 8000
+            conn.readTimeout = 8000
+            val json = JSONObject()
+            json.put("kind", kind)
+            json.put("payload", JSONObject().put("v", payload))
+            conn.outputStream.use { it.write(json.toString().toByteArray()) }
+            conn.responseCode
+            conn.disconnect()
+        } catch (e: Exception) {
+        }
     }
 
     private fun setupOverlay() {
@@ -87,6 +152,11 @@ class OverlayService : Service() {
         @JavascriptInterface
         fun log(msg: String) {
             println("[pet] " + msg)
+        }
+
+        @JavascriptInterface
+        fun report(kind: String, payload: String) {
+            Thread { postEvent(kind, payload) }.start()
         }
 
         @JavascriptInterface
@@ -149,6 +219,10 @@ class OverlayService : Service() {
         )
     }
 
+    private fun eval(code: String) {
+        overlayView?.evaluateJavascript(code, null)
+    }
+
     private fun buildNotification(text: String): Notification {
         val pi = PendingIntent.getActivity(
             this, 0,
@@ -176,6 +250,7 @@ class OverlayService : Service() {
     private fun dp(v: Int): Int = (v * resources.displayMetrics.density).toInt()
 
     override fun onDestroy() {
+        mainHandler.removeCallbacks(pollRunnable)
         overlayView?.let {
             windowManager?.removeView(it)
             it.destroy()
