@@ -21,7 +21,7 @@ class MainActivity : AppCompatActivity() {
             setPadding(64, 128, 64, 64)
         }
         root.addView(TextView(this).apply {
-            text = "小云朵\n\n按顺序来：\n1 给它悬浮窗权限\n2 允许它通知\n3 启动它"
+            text = "小云朵\n\n按顺序来：\n1 悬浮窗权限\n2 通知权限\n3 使用情况访问（让它知道你在用什么App）\n4 启动它"
             textSize = 16f
         })
         root.addView(Button(this).apply {
@@ -39,11 +39,17 @@ class MainActivity : AppCompatActivity() {
             }
         })
         root.addView(Button(this).apply {
-            text = "3 启动 / 唤醒"
+            text = "3 使用情况访问"
+            setOnClickListener {
+                startActivity(Intent(Settings.ACTION_USAGE_ACCESS_SETTINGS))
+            }
+        })
+        root.addView(Button(this).apply {
+            text = "4 启动 / 唤醒"
             setOnClickListener { startForegroundServiceCompat() }
         })
         root.addView(Button(this).apply {
-            text = "4 收起"
+            text = "5 收起"
             setOnClickListener { stopService(Intent(this@MainActivity, OverlayService::class.java)) }
         })
         setContentView(root)
