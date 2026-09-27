@@ -3,72 +3,160 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>xiao yun</title>
+<title>小云朵</title>
 <style>
   html, body { margin:0; padding:0; width:100%; height:100%; background:transparent; overflow:hidden; }
-  #pet { width:100%; height:100%; display:block; transition: transform .14s ease-out; }
-  .bob { animation: bob 4s ease-in-out infinite; }
-  @keyframes bob { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-8px); } }
-  .rain { animation: drip 1.8s linear infinite; }
+  #pet { width:100%; height:100%; display:block; }
+  .bob { animation: bob 4.2s ease-in-out infinite; }
+  @keyframes bob { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-7px); } }
+  .rain { animation: drip 2s linear infinite; }
   @keyframes drip {
     0% { opacity:0; transform: translateY(-8px); }
-    30% { opacity:.9; }
-    100% { opacity:0; transform: translateY(30px); }
+    30% { opacity:.85; }
+    100% { opacity:0; transform: translateY(28px); }
   }
+  .expr { transition: opacity .18s ease; }
+  #blushL, #blushR { transition: opacity .3s ease; }
 </style>
 </head>
 <body>
 <svg id="pet" viewBox="0 0 180 220" xmlns="http://www.w3.org/2000/svg">
   <defs>
-    <linearGradient id="cg" x1="0" y1="0" x2="0" y2="1">
-      <stop offset="0" stop-color="#a9cdf0"/>
-      <stop offset="1" stop-color="#6f98c9"/>
+    <linearGradient id="cloudGrad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#ffffff"/>
+      <stop offset="0.62" stop-color="#f4f9fe"/>
+      <stop offset="1" stop-color="#d9e9f8"/>
+    </linearGradient>
+    <radialGradient id="sheen" cx="0.32" cy="0.22" r="0.55">
+      <stop offset="0" stop-color="#ffffff" stop-opacity="0.95"/>
+      <stop offset="1" stop-color="#ffffff" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="rainGrad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#b7d9f2"/>
+      <stop offset="1" stop-color="#8fbfe6"/>
     </linearGradient>
   </defs>
+
   <g class="bob">
-    <g id="cloud">
-      <ellipse cx="90" cy="122" rx="62" ry="32" fill="url(#cg)"/>
-      <circle cx="54" cy="120" r="28" fill="#8fb8e0"/>
-      <circle cx="126" cy="120" r="32" fill="#8fb8e0"/>
-      <circle cx="90" cy="92" r="38" fill="#a9cdf0"/>
+    <!-- 云体 -->
+    <path id="cloud"
+      d="M46 140
+         C40 126 48 114 60 112
+         C62 98 72 88 86 86
+         C88 72 98 62 112 62
+         C124 62 132 70 132 82
+         C144 82 154 90 154 102
+         C164 108 168 120 162 132
+         C160 140 152 142 144 142
+         L58 142
+         C48 142 44 140 46 140 Z"
+      fill="url(#cloudGrad)" stroke="#cfe3f5" stroke-width="2" stroke-linejoin="round"/>
+    <path id="sheen"
+      d="M46 140 C40 126 48 114 60 112 C62 98 72 88 86 86 C88 72 98 62 112 62 C124 62 132 70 132 82 C144 82 154 90 154 102 C164 108 168 120 162 132 C160 140 152 142 144 142 L58 142 C48 142 44 140 46 140 Z"
+      fill="url(#sheen)"/>
+
+    <!-- 腮红 -->
+    <ellipse id="blushL" cx="66" cy="116" rx="9" ry="5.5" fill="#ffb9c8" opacity="0.65"/>
+    <ellipse id="blushR" cx="116" cy="116" rx="9" ry="5.5" fill="#ffb9c8" opacity="0.65"/>
+
+    <!-- 表情：normal -->
+    <g id="exprNormal" class="expr">
+      <circle cx="79" cy="102" r="4.6" fill="#3a4a5c"/>
+      <circle cx="103" cy="102" r="4.6" fill="#3a4a5c"/>
+      <circle cx="80.6" cy="100.4" r="1.5" fill="#ffffff"/>
+      <circle cx="104.6" cy="100.4" r="1.5" fill="#ffffff"/>
+      <path d="M86 116 Q91 121 96 116" fill="none" stroke="#3a4a5c" stroke-width="2.2" stroke-linecap="round"/>
     </g>
-    <g id="eyes">
-      <circle cx="74" cy="112" r="4.5" fill="#26384d"/>
-      <circle cx="106" cy="112" r="4.5" fill="#26384d"/>
+
+    <!-- 表情：happy -->
+    <g id="exprHappy" class="expr" style="display:none">
+      <path d="M73 101 Q79 95 85 101" fill="none" stroke="#3a4a5c" stroke-width="2.4" stroke-linecap="round"/>
+      <path d="M97 101 Q103 95 109 101" fill="none" stroke="#3a4a5c" stroke-width="2.4" stroke-linecap="round"/>
+      <path d="M84 116 Q91 125 98 116 Z" fill="#3a4a5c" stroke-linejoin="round"/>
     </g>
+
+    <!-- 表情：shy -->
+    <g id="exprShy" class="expr" style="display:none">
+      <path d="M75 102 L71 106 L75 106 Z" fill="#3a4a5c"/>
+      <path d="M107 102 L111 106 L107 106 Z" fill="#3a4a5c"/>
+      <path d="M87 118 Q91 120 95 118" fill="none" stroke="#3a4a5c" stroke-width="2" stroke-linecap="round"/>
+    </g>
+
+    <!-- 表情：angry -->
+    <g id="exprAngry" class="expr" style="display:none">
+      <line x1="71" y1="92" x2="85" y2="98" stroke="#3a4a5c" stroke-width="2.4" stroke-linecap="round"/>
+      <line x1="111" y1="92" x2="97" y2="98" stroke="#3a4a5c" stroke-width="2.4" stroke-linecap="round"/>
+      <circle cx="79" cy="103" r="4.2" fill="#3a4a5c"/>
+      <circle cx="103" cy="103" r="4.2" fill="#3a4a5c"/>
+      <path d="M87 122 Q91 117 95 122" fill="none" stroke="#3a4a5c" stroke-width="2.2" stroke-linecap="round"/>
+    </g>
+
+    <!-- 表情：blink -->
+    <g id="exprBlink" class="expr" style="display:none">
+      <path d="M74 102 Q79 99 84 102" fill="none" stroke="#3a4a5c" stroke-width="2.4" stroke-linecap="round"/>
+      <path d="M98 102 Q103 99 108 102" fill="none" stroke="#3a4a5c" stroke-width="2.4" stroke-linecap="round"/>
+      <path d="M86 116 Q91 121 96 116" fill="none" stroke="#3a4a5c" stroke-width="2.2" stroke-linecap="round"/>
+    </g>
+
+    <!-- 雨滴 -->
     <g id="drops">
-      <line class="rain" x1="60" y1="152" x2="60" y2="162" stroke="#8fc0e8" stroke-width="3.5" stroke-linecap="round"/>
-      <line class="rain" x1="90" y1="158" x2="90" y2="168" stroke="#8fc0e8" stroke-width="3.5" stroke-linecap="round"/>
-      <line class="rain" x1="120" y1="152" x2="120" y2="162" stroke="#8fc0e8" stroke-width="3.5" stroke-linecap="round"/>
+      <line class="rain" x1="58" y1="150" x2="58" y2="161" stroke="url(#rainGrad)" stroke-width="3.6" stroke-linecap="round"/>
+      <line class="rain" x1="90" y1="156" x2="90" y2="167" stroke="url(#rainGrad)" stroke-width="3.6" stroke-linecap="round"/>
+      <line class="rain" x1="122" y1="150" x2="122" y2="161" stroke="url(#rainGrad)" stroke-width="3.6" stroke-linecap="round"/>
     </g>
   </g>
 </svg>
 <script>
 (function () {
+  var groups = {
+    normal: document.getElementById('exprNormal'),
+    happy: document.getElementById('exprHappy'),
+    shy: document.getElementById('exprShy'),
+    angry: document.getElementById('exprAngry'),
+    blink: document.getElementById('exprBlink')
+  };
+  var blushes = [document.getElementById('blushL'), document.getElementById('blushR')];
   var cloud = document.getElementById('cloud');
   var drops = document.getElementById('drops');
-  var eyes = document.getElementById('eyes');
   var pet = document.getElementById('pet');
+  var current = 'normal';
+  var timer = null;
+
   function log(m) { try { if (window.petHost) window.petHost.log(m); } catch (e) {} }
+
+  function show(name) {
+    for (var k in groups) { groups[k].style.display = (k === name) ? '' : 'none'; }
+    current = name;
+  }
+
+  function flash(name, dur) {
+    show(name);
+    if (timer) clearTimeout(timer);
+    timer = setTimeout(function () { show('normal'); }, dur || 700);
+  }
+
   window.petEngine = {
     onTap: function () {
       log('tap');
       pet.style.transform = 'scale(1.06)';
       setTimeout(function () { pet.style.transform = 'scale(1)'; }, 140);
+      flash('happy', 500);
     },
     onDoubleTap: function () {
       log('double');
-      eyes.setAttribute('transform', 'translate(0,-6)');
-      setTimeout(function () { eyes.removeAttribute('transform'); }, 600);
+      flash('blink', 600);
+      for (var i = 0; i < blushes.length; i++) { blushes[i].setAttribute('opacity', '0.9'); }
+      setTimeout(function () { for (var j = 0; j < blushes.length; j++) { blushes[j].setAttribute('opacity', '0.65'); } }, 600);
     },
     onLongPress: function () {
       log('long');
+      flash('angry', 900);
       drops.style.display = 'none';
-      setTimeout(function () { drops.style.display = ''; }, 800);
+      setTimeout(function () { drops.style.display = ''; }, 900);
     },
     setMood: function (m) {
       log('mood:' + m);
-      cloud.setAttribute('opacity', m === 'dark' ? '0.75' : '1');
+      if (groups[m]) { flash(m, 1200); }
     }
   };
 })();
