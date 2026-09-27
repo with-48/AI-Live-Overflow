@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>xiao yun</title>
+<style>
+  html, body { margin:0; padding:0; width:100%; height:100%; background:transparent; overflow:hidden; }
+  #pet { width:100%; height:100%; display:block; transition: transform .14s ease-out; }
+  .bob { animation: bob 4s ease-in-out infinite; }
+  @keyframes bob { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-8px); } }
+  .rain { animation: drip 1.8s linear infinite; }
+  @keyframes drip {
+    0% { opacity:0; transform: translateY(-8px); }
+    30% { opacity:.9; }
+    100% { opacity:0; transform: translateY(30px); }
+  }
+</style>
+</head>
+<body>
+<svg id="pet" viewBox="0 0 180 220" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="cg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#a9cdf0"/>
+      <stop offset="1" stop-color="#6f98c9"/>
+    </linearGradient>
+  </defs>
+  <g class="bob">
+    <g id="cloud">
+      <ellipse cx="90" cy="122" rx="62" ry="32" fill="url(#cg)"/>
+      <circle cx="54" cy="120" r="28" fill="#8fb8e0"/>
+      <circle cx="126" cy="120" r="32" fill="#8fb8e0"/>
+      <circle cx="90" cy="92" r="38" fill="#a9cdf0"/>
+    </g>
+    <g id="eyes">
+      <circle cx="74" cy="112" r="4.5" fill="#26384d"/>
+      <circle cx="106" cy="112" r="4.5" fill="#26384d"/>
+    </g>
+    <g id="drops">
+      <line class="rain" x1="60" y1="152" x2="60" y2="162" stroke="#8fc0e8" stroke-width="3.5" stroke-linecap="round"/>
+      <line class="rain" x1="90" y1="158" x2="90" y2="168" stroke="#8fc0e8" stroke-width="3.5" stroke-linecap="round"/>
+      <line class="rain" x1="120" y1="152" x2="120" y2="162" stroke="#8fc0e8" stroke-width="3.5" stroke-linecap="round"/>
+    </g>
+  </g>
+</svg>
+<script>
+(function () {
+  var cloud = document.getElementById('cloud');
+  var drops = document.getElementById('drops');
+  var eyes = document.getElementById('eyes');
+  var pet = document.getElementById('pet');
+  function log(m) { try { if (window.petHost) window.petHost.log(m); } catch (e) {} }
+  window.petEngine = {
+    onTap: function () {
+      log('tap');
+      pet.style.transform = 'scale(1.06)';
+      setTimeout(function () { pet.style.transform = 'scale(1)'; }, 140);
+    },
+    onDoubleTap: function () {
+      log('double');
+      eyes.setAttribute('transform', 'translate(0,-6)');
+      setTimeout(function () { eyes.removeAttribute('transform'); }, 600);
+    },
+    onLongPress: function () {
+      log('long');
+      drops.style.display = 'none';
+      setTimeout(function () { drops.style.display = ''; }, 800);
+    },
+    setMood: function (m) {
+      log('mood:' + m);
+      cloud.setAttribute('opacity', m === 'dark' ? '0.75' : '1');
+    }
+  };
+})();
+</script>
+</body>
+</html>
