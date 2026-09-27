@@ -23,7 +23,8 @@
   <defs>
     <linearGradient id="cloudGrad" x1="0" y1="0" x2="0" y2="1">
       <stop offset="0" stop-color="#ffffff"/>
-      <stop offset="1" stop-color="#f2f8fd"/>
+      <stop offset="0.72" stop-color="#f7fbfe"/>
+      <stop offset="1" stop-color="#dbeaf8"/>
     </linearGradient>
     <linearGradient id="rainGrad" x1="0" y1="0" x2="0" y2="1">
       <stop offset="0" stop-color="#bcdaf2"/>
@@ -32,64 +33,71 @@
   </defs>
 
   <g class="bob">
-    <!-- 云体：胶囊底 + 三个圆鼓包 -->
-    <rect id="cloud" x="34" y="78" width="112" height="54" rx="27" fill="url(#cloudGrad)"/>
-    <circle cx="60" cy="78" r="25" fill="#ffffff"/>
-    <circle cx="90" cy="68" r="32" fill="#ffffff"/>
-    <circle cx="120" cy="78" r="25" fill="#ffffff"/>
-    <!-- 底部柔阴影 -->
-    <ellipse cx="90" cy="130" rx="58" ry="9" fill="#dcebf8" opacity="0.55"/>
-    <!-- 顶部高光 -->
-    <ellipse cx="72" cy="70" rx="24" ry="13" fill="#ffffff" opacity="0.7"/>
+    <!-- 云体：宽扁，两个小鼓包，底部平 -->
+    <path id="cloud"
+      d="M44 140
+         C32 140 24 132 24 122
+         C24 112 30 104 40 100
+         C44 86 56 76 72 74
+         C84 72 88 82 92 84
+         C96 78 104 74 114 78
+         C128 82 138 92 140 104
+         C152 106 158 116 158 126
+         C158 134 150 140 140 140
+         L44 140 Z"
+      fill="url(#cloudGrad)" stroke="#a9cfe8" stroke-width="3" stroke-linejoin="round" stroke-linecap="round"/>
+    <!-- 底部淡蓝阴影带 -->
+    <path d="M40 132 C70 142 110 142 144 132 C142 137 138 140 132 140 L48 140 C42 140 40 136 40 132 Z"
+      fill="#c8e0f2" opacity="0.85"/>
 
     <!-- 腮红 -->
-    <ellipse id="blushL" cx="62" cy="98" rx="10" ry="6" fill="#ffc3d2" opacity="0.75"/>
-    <ellipse id="blushR" cx="118" cy="98" rx="10" ry="6" fill="#ffc3d2" opacity="0.75"/>
+    <ellipse id="blushL" cx="62" cy="118" rx="10" ry="6" fill="#ffc3d2" opacity="0.75"/>
+    <ellipse id="blushR" cx="118" cy="118" rx="10" ry="6" fill="#ffc3d2" opacity="0.75"/>
 
     <!-- 表情 normal -->
     <g id="exprNormal">
-      <circle cx="78" cy="88" r="5" fill="#3b4a5b"/>
-      <circle cx="104" cy="88" r="5" fill="#3b4a5b"/>
-      <circle cx="79.8" cy="86.2" r="1.7" fill="#ffffff"/>
-      <circle cx="105.8" cy="86.2" r="1.7" fill="#ffffff"/>
-      <path d="M86 102 Q91 107 96 102" fill="none" stroke="#3b4a5b" stroke-width="2.2" stroke-linecap="round"/>
+      <circle cx="78" cy="108" r="5" fill="#3b4a5b"/>
+      <circle cx="104" cy="108" r="5" fill="#3b4a5b"/>
+      <circle cx="79.8" cy="106.2" r="1.7" fill="#ffffff"/>
+      <circle cx="105.8" cy="106.2" r="1.7" fill="#ffffff"/>
+      <path d="M86 122 Q91 127 96 122" fill="none" stroke="#3b4a5b" stroke-width="2.2" stroke-linecap="round"/>
     </g>
 
     <!-- 表情 happy -->
     <g id="exprHappy" style="display:none">
-      <path d="M72 87 Q78 81 84 87" fill="none" stroke="#3b4a5b" stroke-width="2.4" stroke-linecap="round"/>
-      <path d="M96 87 Q102 81 108 87" fill="none" stroke="#3b4a5b" stroke-width="2.4" stroke-linecap="round"/>
-      <path d="M83 101 Q90 111 97 101 Z" fill="#3b4a5b" stroke-linejoin="round"/>
+      <path d="M72 107 Q78 101 84 107" fill="none" stroke="#3b4a5b" stroke-width="2.4" stroke-linecap="round"/>
+      <path d="M96 107 Q102 101 108 107" fill="none" stroke="#3b4a5b" stroke-width="2.4" stroke-linecap="round"/>
+      <path d="M83 121 Q90 131 97 121 Z" fill="#3b4a5b" stroke-linejoin="round"/>
     </g>
 
     <!-- 表情 shy -->
     <g id="exprShy" style="display:none">
-      <path d="M73 88 L69 92 L73 92 Z" fill="#3b4a5b"/>
-      <path d="M107 88 L111 92 L107 92 Z" fill="#3b4a5b"/>
-      <path d="M86 104 Q90 106 94 104" fill="none" stroke="#3b4a5b" stroke-width="2" stroke-linecap="round"/>
+      <path d="M73 108 L69 112 L73 112 Z" fill="#3b4a5b"/>
+      <path d="M107 108 L111 112 L107 112 Z" fill="#3b4a5b"/>
+      <path d="M86 124 Q90 126 94 124" fill="none" stroke="#3b4a5b" stroke-width="2" stroke-linecap="round"/>
     </g>
 
     <!-- 表情 angry -->
     <g id="exprAngry" style="display:none">
-      <line x1="70" y1="78" x2="84" y2="84" stroke="#3b4a5b" stroke-width="2.4" stroke-linecap="round"/>
-      <line x1="110" y1="78" x2="96" y2="84" stroke="#3b4a5b" stroke-width="2.4" stroke-linecap="round"/>
-      <circle cx="78" cy="89" r="4.6" fill="#3b4a5b"/>
-      <circle cx="104" cy="89" r="4.6" fill="#3b4a5b"/>
-      <path d="M86 109 Q91 104 96 109" fill="none" stroke="#3b4a5b" stroke-width="2.2" stroke-linecap="round"/>
+      <line x1="70" y1="98" x2="84" y2="104" stroke="#3b4a5b" stroke-width="2.4" stroke-linecap="round"/>
+      <line x1="110" y1="98" x2="96" y2="104" stroke="#3b4a5b" stroke-width="2.4" stroke-linecap="round"/>
+      <circle cx="78" cy="109" r="4.6" fill="#3b4a5b"/>
+      <circle cx="104" cy="109" r="4.6" fill="#3b4a5b"/>
+      <path d="M86 129 Q91 124 96 129" fill="none" stroke="#3b4a5b" stroke-width="2.2" stroke-linecap="round"/>
     </g>
 
     <!-- 表情 blink -->
     <g id="exprBlink" style="display:none">
-      <path d="M73 88 Q78 85 83 88" fill="none" stroke="#3b4a5b" stroke-width="2.4" stroke-linecap="round"/>
-      <path d="M97 88 Q102 85 107 88" fill="none" stroke="#3b4a5b" stroke-width="2.4" stroke-linecap="round"/>
-      <path d="M86 102 Q91 107 96 102" fill="none" stroke="#3b4a5b" stroke-width="2.2" stroke-linecap="round"/>
+      <path d="M73 108 Q78 105 83 108" fill="none" stroke="#3b4a5b" stroke-width="2.4" stroke-linecap="round"/>
+      <path d="M97 108 Q102 105 107 108" fill="none" stroke="#3b4a5b" stroke-width="2.4" stroke-linecap="round"/>
+      <path d="M86 122 Q91 127 96 122" fill="none" stroke="#3b4a5b" stroke-width="2.2" stroke-linecap="round"/>
     </g>
 
     <!-- 雨滴 -->
     <g id="drops">
-      <line class="rain" x1="56" y1="142" x2="56" y2="153" stroke="url(#rainGrad)" stroke-width="3.6" stroke-linecap="round"/>
-      <line class="rain" x1="90" y1="148" x2="90" y2="159" stroke="url(#rainGrad)" stroke-width="3.6" stroke-linecap="round"/>
-      <line class="rain" x1="124" y1="142" x2="124" y2="153" stroke="url(#rainGrad)" stroke-width="3.6" stroke-linecap="round"/>
+      <line class="rain" x1="56" y1="152" x2="56" y2="163" stroke="url(#rainGrad)" stroke-width="3.6" stroke-linecap="round"/>
+      <line class="rain" x1="90" y1="158" x2="90" y2="169" stroke="url(#rainGrad)" stroke-width="3.6" stroke-linecap="round"/>
+      <line class="rain" x1="124" y1="152" x2="124" y2="163" stroke="url(#rainGrad)" stroke-width="3.6" stroke-linecap="round"/>
     </g>
   </g>
 </svg>
